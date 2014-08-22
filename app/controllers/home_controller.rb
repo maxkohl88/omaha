@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
 
-  def show
-    
+  layout 'angular'
+
+  def index
   end
-  
+
 end
