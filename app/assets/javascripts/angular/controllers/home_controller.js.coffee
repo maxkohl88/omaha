@@ -1,4 +1,4 @@
-app = angular.module 'omaha.controllers', []
+app = angular.module 'home.controller', []
 
 app.controller "HomeCtrl", @HomeCtrl = ($scope) ->
   $scope.name = "Omaha!"
