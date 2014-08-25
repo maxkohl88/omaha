@@ -1,20 +1,19 @@
 app = angular.module 'play.controller', []
 
 app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
-  $scope.name = "Let's Play"
 
+  # wrap a Snap canvas on the football field
   $scope.field = Snap ('#football-field')
 
+  # set a scoped reference to the field as 'field'
   field = $scope.field
 
-  # $scope.x1 = field.text(50, 50, 'X')
-  # $scope.x1.attr(
-  #   fill: 'white',
-  #   fontSize: '48'
-  # )
-
+  # initiate an empty array for the offensive players and set a scoped reference
+  # to it as 'offense'
   $scope.offense = []
+  offense = $scope.offense
 
+  # create 11 svg text elements and push them into the offense array
   i = 0
   cx = 0
   cy = 0
@@ -33,27 +32,41 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     $scope.offense.push player
     i++
 
+  # set variable references to each 'player' in the offense and give them initial
+  # starting positions
+
   # QB
-  $scope.offense[0].transform('T600, 600')
+  qb = offense[0]
+  qb.transform('T600, 600')
   # LT
-  $scope.offense[1].transform('T500, 550')
+  lt = offense[1]
+  lt.transform('T500, 550')
   # LG
-  $scope.offense[2].transform('T550, 550')
+  lg = offense[2]
+  lg.transform('T550, 550')
   # C
-  $scope.offense[3].transform('T600, 550')
+  c = offense[3]
+  c.transform('T600, 550')
   # RG
-  $scope.offense[4].transform('T650, 550')
+  rg = offense[4]
+  rg.transform('T650, 550')
   # RT
-  $scope.offense[5].transform('T700, 550')
+  rt = offense[5]
+  rt.transform('T700, 550')
   # RB
-  $scope.offense[6].transform('T600, 700')
+  rb = offense[6]
+  rb.transform('T600, 700')
   # TE
-  $scope.offense[7].transform('T450, 550')
+  te = offense[7]
+  te.transform('T450, 550')
   # WR1
-  $scope.offense[8].transform('T1100, 550')
+  wr1 = offense[8]
+  wr1.transform('T1100, 550')
   # WR2
-  $scope.offense[9].transform('T100, 550')
+  wr2 = offense[9]
+  wr2.transform('T100, 550')
   # WR3
-  $scope.offense[10].transform('T900, 550')
+  wr3 = offense[10]
+  wr3.transform('T900, 550')
 
 
