@@ -20,7 +20,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   while i < 11
     fill = "white"
     fontSize = "48"
-    player = field.text(cx, cy, "X")
+    player = field.text(cx, cy, "O")
     player.attr
       fill: fill
       fontSize: fontSize
@@ -69,4 +69,43 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   wr3 = offense[10]
   wr3.transform('T900, 550')
 
+  # draw wr1 path
+  wr1Path = field.path("M1100 550, 1100 200, 1075 225").attr(
+    fill: 'none'
+    strokeWidth: '4'
+    stroke: 'white'
+    strokeDasharray: '12 6'
+  )
+
+  #draw wr2 path
+  wr3Path = field.path("M100 550, 100 375, 400 375").attr(
+    fill: 'none'
+    strokeWidth: '4'
+    stroke: 'white'
+    strokeDasharray: '12 6'
+    )
+
+  #draw wr3 path
+  wr3Path = field.path("M900 550, 850 500, 850 0").attr(
+    fill: 'none'
+    strokeWidth: '4'
+    stroke: 'yellow'
+    strokeDasharray: '12 6'
+    )
+
+  #draw te path
+  tePath = field.path("M450 550, 450 250, 700 250").attr(
+    fill: 'none'
+    strokeWidth: '4'
+    stroke: 'white'
+    strokeDasharray: '12 6'
+    )
+
+  #draw rb path
+  rbPath = field.path("M600 700, 1150 650, 1175 550").attr(
+    fill: 'none'
+    strokeWidth: '4'
+    stroke: 'white'
+    strokeDasharray: '12 6'
+    )
 
