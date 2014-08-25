@@ -4,9 +4,9 @@ app.config ['$routeProvider', ($routeProvider) ->
   $routeProvider.when('/',
     templateUrl: 'homepage.html',
     controller: 'HomeCtrl'
-    ).when('/play',
+  ).when('/play',
     templateUrl: 'play.html',
     controller: 'PlayCtrl'
-    ).otherwise redirectTo: '/']
+  ).otherwise redirectTo: '/']
 
 
