@@ -69,6 +69,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   wr3 = offense[10]
   wr3.transform('T900, 550')
 
+  football = field.ellipse(0, 0, 10, 20).attr(
+    fill: 'rgba(105, 54, 24, 1)'
+  ) 
+
   # draw wr1 path
   wr1Path = field.path("M1100 550, 1100 200, 1075 225").attr(
     fill: 'none'
@@ -78,7 +82,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   )
 
   #draw wr2 path
-  wr3Path = field.path("M100 550, 100 375, 400 375").attr(
+  wr2Path = field.path("M100 550, 100 375, 400 375").attr(
     fill: 'none'
     strokeWidth: '4'
     stroke: 'white'
@@ -108,4 +112,92 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     stroke: 'white'
     strokeDasharray: '12 6'
     )
+
+  footballPath = field.path("M650 575, 850 150")
+
+  console.log wr1.data('cx')
+
+  # initialize wr1 on its path
+  initWr1 = () ->
+    wr1InitPoint = wr1Path.getPointAtLength(0)
+    wr1.transform('t' + parseInt(wr1InitPoint.x) + ',' + parseInt(wr1InitPoint.y))
+
+  initWr2 = () ->
+    wr2InitPoint = wr2Path.getPointAtLength(0)
+    wr2.transform('t' + parseInt(wr2InitPoint.x) + ',' + parseInt(wr2InitPoint.y))
+
+  initWr3 = () ->
+    wr3InitPoint = wr3Path.getPointAtLength(0)
+    wr3.transform('t' + parseInt(wr3InitPoint.x) + ',' + parseInt(wr3InitPoint.y))
+
+  initTe = () ->
+    teInitPoint = tePath.getPointAtLength(0)
+    te.transform('t' + parseInt(teInitPoint.x) + ',' + parseInt(teInitPoint.y))
+
+  initRb = () ->
+    rbInitPoint = rbPath.getPointAtLength(0)
+    rb.transform('t' + parseInt(rbInitPoint.x) + ',' + parseInt(rbInitPoint.y))
+
+  initFootball = () ->
+    footballInitPoint = footballPath.getPointAtLength(0)
+    football.transform('t' + parseInt(footballInitPoint.x) + ',' + parseInt(footballInitPoint.y))
+
+  # call the initialization
+  initWr1()
+  initWr2()
+  initWr3()
+  initTe()
+  initRb()
+  initFootball()
+
+  # run the play
+  runPlay = () ->
+    lenWr1 = wr1Path.getTotalLength()
+    lenWr2 = wr2Path.getTotalLength()
+    lenWr3 = wr3Path.getTotalLength()
+    lenTe = tePath.getTotalLength()
+    lenRb = rbPath.getTotalLength()
+    lenFootball = footballPath.getTotalLength()
+
+    Snap.animate 0, lenWr1, ((value) ->
+      wr1MovePoint = wr1Path.getPointAtLength(value)
+      wr1.transform "T" + parseInt(wr1MovePoint.x - 25) + ',' + parseInt(wr1MovePoint.y - 25)
+    ), 1500
+
+    Snap.animate 0, lenWr2, ((value) ->
+      wr2MovePoint = wr2Path.getPointAtLength(value)
+      wr2.transform "T" + parseInt(wr2MovePoint.x - 25) + ',' + parseInt(wr2MovePoint.y - 25)
+    ), 1500
+
+    Snap.animate 0, lenWr3, ((value) ->
+      wr3MovePoint = wr3Path.getPointAtLength(value)
+      wr3.transform "T" + parseInt(wr3MovePoint.x - 25) + ',' + parseInt(wr3MovePoint.y - 25)
+    ), 1500
+
+    Snap.animate 0, lenTe, ((value) ->
+      teMovePoint = tePath.getPointAtLength(value)
+      te.transform "T" + parseInt(teMovePoint.x - 25) + ',' + parseInt(teMovePoint.y - 25)
+    ), 1500
+
+    Snap.animate 0, lenRb, ((value) ->
+      rbMovePoint = rbPath.getPointAtLength(value)
+      rb.transform "T" + parseInt(rbMovePoint.x - 25) + ',' + parseInt(rbMovePoint.y - 25)
+    ), 1500
+
+    throwFootball = () ->
+      Snap.animate 0, lenFootball, ((value) ->
+        footballMovePoint = footballPath.getPointAtLength(value)
+        football.transform "T" + parseInt(footballMovePoint.x - 25) + ',' + parseInt(footballMovePoint.y - 25)
+        ), 1500
+
+    throwFootball()
+
+  hike = field.text(50, 50, "Hike!").attr(
+    fill: 'white'
+    fontSize: '36'
+    )
+
+  hike.node.onclick = () ->
+    runPlay()
+
 
