@@ -73,49 +73,30 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     fill: 'rgba(105, 54, 24, 1)'
   ) 
 
-  # draw wr1 path
-  wr1Path = field.path("M1100 550, 1100 200, 1075 225").attr(
-    fill: 'none'
-    strokeWidth: '4'
-    stroke: 'white'
-    strokeDasharray: '12 6'
-  )
+  # factory for drawing paths
+  drawPath = (coordinates) ->
+    pathNodes = coordinates.join(',')
+    field.path(pathNodes).attr(
+      fill: 'none'
+      strokeWidth: '4'
+      stroke: 'white'
+      strokeDasharray: '12 6'
+      )
 
-  #draw wr2 path
-  wr2Path = field.path("M100 550, 100 375, 400 375").attr(
-    fill: 'none'
-    strokeWidth: '4'
-    stroke: 'white'
-    strokeDasharray: '12 6'
-    )
+  # set all skill player coordinates
+  wr1Coordinates = ["M1100 550", "1100 200", "1075 225"]
+  wr2Coordinates = ["M100 550", "100 375", "400 375"]
+  wr3Coordinates = ["M900 550", "850 500", "850 0"]
+  teCoordinates = ["M450 550", "450 250", "700 250"]
+  rbCoordinates = ["M600 700", "1150 650", "1175 550"]
 
-  #draw wr3 path
-  wr3Path = field.path("M900 550, 850 500, 850 0").attr(
-    fill: 'none'
-    strokeWidth: '4'
-    stroke: 'yellow'
-    strokeDasharray: '12 6'
-    )
-
-  #draw te path
-  tePath = field.path("M450 550, 450 250, 700 250").attr(
-    fill: 'none'
-    strokeWidth: '4'
-    stroke: 'white'
-    strokeDasharray: '12 6'
-    )
-
-  #draw rb path
-  rbPath = field.path("M600 700, 1150 650, 1175 550").attr(
-    fill: 'none'
-    strokeWidth: '4'
-    stroke: 'white'
-    strokeDasharray: '12 6'
-    )
+  wr1Path = drawPath(wr1Coordinates)  
+  wr2Path = drawPath(wr2Coordinates)
+  wr3Path = drawPath(wr3Coordinates)
+  tePath = drawPath(teCoordinates)
+  rbPath = drawPath(rbCoordinates)
 
   footballPath = field.path("M650 575, 850 150")
-
-  console.log wr1.data('cx')
 
   # initialize wr1 on its path
   initWr1 = () ->
