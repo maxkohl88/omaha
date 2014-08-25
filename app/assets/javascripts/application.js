@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require libraries/snap.svg-min.js
 //= require angular
 //= require angular-route
 //= require angular-resource
