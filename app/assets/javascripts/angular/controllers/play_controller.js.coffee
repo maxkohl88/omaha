@@ -13,15 +13,37 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   $scope.offense = []
   offense = $scope.offense
 
+  $scope.defense = []
+  defense = $scope.defense
+
   # factory for drawing paths
-  drawPath = (coordinates) ->
+  drawPath = (coordinates, team) ->
     pathNodes = coordinates.join(',')
-    field.path(pathNodes).attr(
+    if team is offense
+      stroke = "white"
+    else
+      stroke = ""
+
+    field.path(pathNodes).attr
       fill: 'none'
       strokeWidth: '4'
-      stroke: 'white'
+      stroke: stroke
       strokeDasharray: '12 6'
-      )
+      
+  # factory for creating zones
+  drawZone = (cx, cy, r) ->
+    field.circle(cx, cy, r).attr
+      fill: 'rgba(122, 219, 218, 0.6)'
+
+  # draw zones for defensive players
+  deepRight = drawZone(195, 150, 160)
+  deepLeft = drawZone(1195, 150, 160)
+  deepMiddle = drawZone(720, 50, 160)
+
+  curlFlatRight = drawZone(250, 325, 100)
+  middleHookRight = drawZone(525, 300, 100)
+  middleHookLeft = drawZone(875, 300, 100)
+  curlFlatLeft = drawZone(1140, 325, 100)
 
   # set all player coordinates
   wr1Coordinates = ["M1195 550", "1195 200", "1170 225"]
@@ -36,38 +58,68 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rgCoordinates = ["M745 550", "745 620"]
   rtCoordinates = ["M795 550", "795 640"]
 
+  lcbCoordinates = ["M1225 475", "1195 150"]
+  rcbCoordinates = ["M165 475", "195 150"]
+  leftSafetyCoordinates = ["M965 400", "875 300"]
+  rightSafetyCoordinates = ["M515 250", "720 50"]
+  leftLbCoordinates = ["M895 475", "1140 325"]
+  rightLbCoordinates = ["M475 380", "250 325"]
+  nickelCornerCoordinates = ["M520 200", "525 300"]
 
-  wr1Path = drawPath wr1Coordinates
-  wr2Path = drawPath wr2Coordinates
-  wr3Path = drawPath wr3Coordinates
-  tePath = drawPath teCoordinates
-  rbPath = drawPath rbCoordinates
-  qbPath = drawPath qbCoordinates
-  ltPath = drawPath ltCoordinates
-  lgPath = drawPath lgCoordinates
-  cPath = drawPath cCoordinates
-  rgPath = drawPath rgCoordinates
-  rtPath = drawPath rtCoordinates
+  #draw offensive player paths
+  wr1Path = drawPath wr1Coordinates, offense
+  wr2Path = drawPath wr2Coordinates, offense
+  wr3Path = drawPath wr3Coordinates, offense
+  tePath = drawPath teCoordinates, offense
+  rbPath = drawPath rbCoordinates, offense
+  qbPath = drawPath qbCoordinates, offense
+  ltPath = drawPath ltCoordinates, offense
+  lgPath = drawPath lgCoordinates, offense
+  cPath = drawPath cCoordinates, offense
+  rgPath = drawPath rgCoordinates, offense
+  rtPath = drawPath rtCoordinates, offense
+
+  lcbPath = drawPath lcbCoordinates
+  rcbPath = drawPath rcbCoordinates
+  leftSafetyPath = drawPath leftSafetyCoordinates
+  rightSafetyPath = drawPath rightSafetyCoordinates
+  leftLbPath = drawPath leftLbCoordinates
+  rightLbPath = drawPath rightLbCoordinates
+  nickelCornerPath = drawPath nickelCornerCoordinates
+
 
   # factory for creating players
-  createPlayer = () ->
-    player = field.text(0, 0, "O")
+  createPlayer = (team) ->
+    if team is offense
+      letter = "O"
+    else
+      letter = "X"
+
+    player = field.text(0, 0, letter)
     player.attr
       fill: "white"
       fontSize: "48"
 
   # create the offensive players
-  wr1 = field.group createPlayer() 
-  wr2 = field.group createPlayer() 
-  wr3 = field.group createPlayer() 
-  te = field.group createPlayer() 
-  rb = field.group createPlayer() 
-  qb = field.group createPlayer() 
-  lt = field.group createPlayer() 
-  lg = field.group createPlayer() 
-  c = field.group createPlayer() 
-  rg = field.group createPlayer() 
-  rt = field.group createPlayer()   
+  wr1 = field.group createPlayer(offense) 
+  wr2 = field.group createPlayer(offense) 
+  wr3 = field.group createPlayer(offense) 
+  te = field.group createPlayer(offense) 
+  rb = field.group createPlayer(offense) 
+  qb = field.group createPlayer(offense) 
+  lt = field.group createPlayer(offense) 
+  lg = field.group createPlayer(offense) 
+  c = field.group createPlayer(offense) 
+  rg = field.group createPlayer(offense) 
+  rt = field.group createPlayer(offense)
+
+  lcb = field.group createPlayer(defense)
+  rcb = field.group createPlayer(defense)
+  leftSafety = field.group createPlayer(defense)
+  rightSafety = field.group createPlayer(defense)
+  leftLb = field.group createPlayer(defense)
+  rightLb = field.group createPlayer(defense)
+  nickelCorner = field.group createPlayer(defense)
 
   # factory for initializing players on their paths
   initPlayer = (path, player) ->
@@ -86,6 +138,14 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   initPlayer rgPath, rg
   initPlayer rtPath, rt
   initPlayer qbPath, qb
+
+  initPlayer lcbPath, lcb
+  initPlayer rcbPath, rcb
+  initPlayer leftSafetyPath, leftSafety
+  initPlayer rightSafetyPath, rightSafety
+  initPlayer leftLbPath, leftLb
+  initPlayer rightLbPath, rightLb
+  initPlayer nickelCornerPath, nickelCorner
 
   # draw the football hike path
 
@@ -160,6 +220,14 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute rgPath, rg, 600
     runRoute rtPath, rt, 600
     runRoute qbPath, qb
+
+    runRoute lcbPath, lcb, 1000
+    runRoute rcbPath, rcb, 1000
+    runRoute leftSafetyPath, leftSafety, 1000
+    runRoute rightSafetyPath, rightSafety, 1000
+    runRoute leftLbPath, leftLb, 1000
+    runRoute rightLbPath, rightLb, 1000
+    runRoute nickelCornerPath, nickelCorner, 1000
     
 
   hike = field.text(50, 50, "Hike!").attr(
