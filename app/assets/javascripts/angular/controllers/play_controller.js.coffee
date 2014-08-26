@@ -53,21 +53,11 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   footballPath = field.path("M650 575, 850 150")
 
   # factory for creating players
-  createPlayer = (path) ->
-    startingPoint = path.getPointAtLength(0)
-    cx = startingPoint.x
-    cy = startingPoint.y
-    player = field.text(cx, cy, "O")
+  createPlayer = () ->
+    player = field.text(0, 0, "O")
     player.attr
       fill: "white"
       fontSize: "48"
-    
-    player.data "xOffset", cx
-    player.data "cx", cx
-    player.data "yOffset", cy
-    player.data "cy", cy
-
-    return player
 
   # create the offensive players
   wr1 = createPlayer wr1Path
@@ -82,62 +72,54 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rg = createPlayer rgPath
   rt = createPlayer rtPath
 
-
-  football = field.ellipse(0, 0, 10, 20).attr(
+  # create that pigskin
+  football = field.ellipse(0, 0, 10, 20).attr
     fill: 'rgba(105, 54, 24, 1)'
-  ) 
+  
+
+  # factory for initializing players on their paths
+  initPlayer = (path, player) ->
+    initPoint = path.getPointAtLength(0)
+    player.transform 'T' + parseInt(initPoint.x) + ',' + parseInt(initPoint.y)
+
+  #initialize players along their paths
+  initPlayer wr1Path, wr1
+  initPlayer wr2Path, wr2
+  initPlayer wr3Path, wr3
+  initPlayer tePath, te
+  initPlayer rbPath, rb
+  initPlayer ltPath, lt
+  initPlayer lgPath, lg
+  initPlayer cPath, c
+  initPlayer rgPath, rg
+  initPlayer rtPath, rt
+  initPlayer qbPath, qb
+
+  # animate a player along their path
+
+  runRoute = (path, player, speed) ->
+    pathLength = path.getTotalLength()
+
+    speed = speed || 1500
+
+    Snap.animate 0, pathLength, ((value) ->
+      movePoint = path.getPointAtLength(value)
+      player.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
+      ), speed
 
   runPlay = () ->
+    runRoute wr1Path, wr1
+    runRoute wr2Path, wr2
+    runRoute wr3Path, wr3
+    runRoute tePath, te
+    runRoute rbPath, rb
+    runRoute ltPath, lt
+    runRoute lgPath, lg
+    runRoute cPath, c
+    runRoute rgPath, rg
+    runRoute rtPath, rt
+    runRoute qbPath, qb
 
-    lenWr1 = wr1Path.getTotalLength()
-
-    Snap.animate 0, lenWr1, ((value) ->
-      wr1MovePoint = wr1Path.getPointAtLength(value)
-      wr1.transform "T" + parseInt(wr1MovePoint.x) + ',' + parseInt(wr1MovePoint.y)
-    ), 1500
-
-
-  # # run the play
-  # runPlay = () ->
-  #   lenWr1 = wr1Path.getTotalLength()
-  #   lenWr2 = wr2Path.getTotalLength()
-  #   lenWr3 = wr3Path.getTotalLength()
-  #   lenTe = tePath.getTotalLength()
-  #   lenRb = rbPath.getTotalLength()
-  #   lenFootball = footballPath.getTotalLength()
-
-  #   Snap.animate 0, lenWr1, ((value) ->
-  #     wr1MovePoint = wr1Path.getPointAtLength(value)
-  #     console.log wr1MovePoint
-  #     console.log wr1
-  #     wr1.transform "T" + parseInt(wr1MovePoint.x - 25) + ',' + parseInt(wr1MovePoint.y - 25)
-  #   ), 1500
-
-    # Snap.animate 0, lenWr2, ((value) ->
-    #   wr2MovePoint = wr2Path.getPointAtLength(value)
-    #   wr2.transform "T" + parseInt(wr2MovePoint.x - 25) + ',' + parseInt(wr2MovePoint.y - 25)
-    # ), 1500
-
-    # Snap.animate 0, lenWr3, ((value) ->
-    #   wr3MovePoint = wr3Path.getPointAtLength(value)
-    #   wr3.transform "T" + parseInt(wr3MovePoint.x - 25) + ',' + parseInt(wr3MovePoint.y - 25)
-    # ), 1500
-
-    # Snap.animate 0, lenTe, ((value) ->
-    #   teMovePoint = tePath.getPointAtLength(value)
-    #   te.transform "T" + parseInt(teMovePoint.x - 25) + ',' + parseInt(teMovePoint.y - 25)
-    # ), 1500
-
-    # Snap.animate 0, lenRb, ((value) ->
-    #   rbMovePoint = rbPath.getPointAtLength(value)
-    #   rb.transform "T" + parseInt(rbMovePoint.x - 25) + ',' + parseInt(rbMovePoint.y - 25)
-    # ), 1500
-
-    # throwFootball = () ->
-    #   Snap.animate 0, lenFootball, ((value) ->
-    #     footballMovePoint = footballPath.getPointAtLength(value)
-    #     football.transform "T" + parseInt(footballMovePoint.x - 25) + ',' + parseInt(footballMovePoint.y - 25)
-    #     ), 1500
 
     # throwFootball()
 
