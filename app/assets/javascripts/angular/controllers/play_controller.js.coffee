@@ -24,17 +24,17 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       )
 
   # set all player coordinates
-  wr1Coordinates = ["M1100 550", "1100 200", "1075 225"]
-  wr2Coordinates = ["M100 550", "100 375", "400 375"]
-  wr3Coordinates = ["M900 550", "850 500", "850 0"]
-  teCoordinates = ["M450 550", "450 250", "700 250"]
-  rbCoordinates = ["M600 700", "1150 650", "1175 550"]
-  qbCoordinates = ["M600 650", "600 650"]
-  ltCoordinates = ["M500 550  ", "500 600"]
-  lgCoordinates = ["M550 550", "550 600"]
-  cCoordinates = ["M600 550", "600 600"]
-  rgCoordinates = ["M650 550", "650 600"]
-  rtCoordinates = ["M700 550", "700 600"]
+  wr1Coordinates = ["M1195 550", "1195 200", "1170 225"]
+  wr2Coordinates = ["M195 550", "195 375", "495 375"]
+  wr3Coordinates = ["M995 550", "945 500", "945 0"]
+  teCoordinates = ["M545 550", "545 250", "795 250"]
+  rbCoordinates = ["M745 650", "1245 650", "1270 550"]
+  qbCoordinates = ["M695 650", "695 650"]
+  ltCoordinates = ["M595 550", "595 640"]
+  lgCoordinates = ["M645 550", "645 620"]
+  cCoordinates = ["M695 550", "695 600"]
+  rgCoordinates = ["M745 550", "745 620"]
+  rtCoordinates = ["M795 550", "795 640"]
 
 
   wr1Path = drawPath wr1Coordinates
@@ -94,9 +94,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   hikeEnd = hikePathx + " " + hikePathy
 
-  footballPath = field.path("M625 525," + hikeEnd).attr
-    stroke: 'yellow'
-    strokeWidth: '4'
+  footballPath = field.path("M720 525," + hikeEnd)
   
   # create that pigskin
   football = field.ellipse(0, 0, 10, 20).attr
@@ -118,11 +116,11 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       player.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
       ), speed
 
-  findTarget = (target) ->
+  findTarget = (targetPath) ->
     startPointx = football.matrix.e
     startPointy = football.matrix.f
-    endPointx = target.getPointAtLength(1000).x
-    endPointy = target.getPointAtLength(1000).y
+    endPointx = targetPath.getPointAtLength(1000).x
+    endPointy = targetPath.getPointAtLength(1000).y
 
     startPoint = "M" + startPointx + " " + startPointy
     endPoint = endPointx + " " + endPointy
@@ -156,11 +154,11 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute wr3Path, wr3
     runRoute tePath, te
     runRoute rbPath, rb
-    runRoute ltPath, lt
-    runRoute lgPath, lg
-    runRoute cPath, c
-    runRoute rgPath, rg
-    runRoute rtPath, rt
+    runRoute ltPath, lt, 600
+    runRoute lgPath, lg, 600
+    runRoute cPath, c, 600
+    runRoute rgPath, rg, 600
+    runRoute rtPath, rt, 600
     runRoute qbPath, qb
     
 
