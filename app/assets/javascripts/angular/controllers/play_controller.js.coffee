@@ -132,6 +132,13 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       stroke: 'red'
       strokeWidth: '4'
 
+    initPlayer newPath, football
+
+    throwFootball = () ->
+      runRoute(newPath, football, 500)
+
+    setTimeout throwFootball, 780
+
   snapBall = () ->
     pathLength = footballPath.getTotalLength()
 
