@@ -24,17 +24,17 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       )
 
   # set all player coordinates
-  wr1Coordinates = ["M1100 550", "1100 200", "1075 225"]
-  wr2Coordinates = ["M100 550", "100 375", "400 375"]
-  wr3Coordinates = ["M900 550", "850 500", "850 0"]
-  teCoordinates = ["M450 550", "450 250", "700 250"]
-  rbCoordinates = ["M600 700", "1150 650", "1175 550"]
-  qbCoordinates = ["M600 600", "600 650"]
-  ltCoordinates = ["M500 550", "500 600"]
-  lgCoordinates = ["M550 550", "550 600"]
-  cCoordinates = ["M600 550", "600 600"]
-  rgCoordinates = ["M650 550", "650 600"]
-  rtCoordinates = ["M700 550", "700 600"]
+  wr1Coordinates = ["M1195 550", "1195 200", "1170 225"]
+  wr2Coordinates = ["M195 550", "195 375", "495 375"]
+  wr3Coordinates = ["M995 550", "945 500", "945 0"]
+  teCoordinates = ["M545 550", "545 250", "795 250"]
+  rbCoordinates = ["M745 650", "1245 650", "1270 550"]
+  qbCoordinates = ["M695 650", "695 650"]
+  ltCoordinates = ["M595 550", "595 640"]
+  lgCoordinates = ["M645 550", "645 620"]
+  cCoordinates = ["M695 550", "695 600"]
+  rgCoordinates = ["M745 550", "745 620"]
+  rtCoordinates = ["M795 550", "795 640"]
 
 
   wr1Path = drawPath wr1Coordinates
@@ -49,97 +49,118 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rgPath = drawPath rgCoordinates
   rtPath = drawPath rtCoordinates
 
-  # draw the pigskin
-  footballPath = field.path("M650 575, 850 150")
-
   # factory for creating players
-  createPlayer = (path) ->
-    startingPoint = path.getPointAtLength(0)
-    cx = startingPoint.x
-    cy = startingPoint.y
-    player = field.text(cx, cy, "O")
+  createPlayer = () ->
+    player = field.text(0, 0, "O")
     player.attr
       fill: "white"
       fontSize: "48"
-    
-    player.data "xOffset", cx
-    player.data "cx", cx
-    player.data "yOffset", cy
-    player.data "cy", cy
-
-    return player
 
   # create the offensive players
-  wr1 = createPlayer wr1Path
-  wr2 = createPlayer wr2Path
-  wr3 = createPlayer wr3Path
-  te = createPlayer tePath
-  rb = createPlayer rbPath
-  qb = createPlayer qbPath
-  lt = createPlayer ltPath
-  lg = createPlayer lgPath
-  c = createPlayer cPath
-  rg = createPlayer rgPath
-  rt = createPlayer rtPath
+  wr1 = field.group createPlayer() 
+  wr2 = field.group createPlayer() 
+  wr3 = field.group createPlayer() 
+  te = field.group createPlayer() 
+  rb = field.group createPlayer() 
+  qb = field.group createPlayer() 
+  lt = field.group createPlayer() 
+  lg = field.group createPlayer() 
+  c = field.group createPlayer() 
+  rg = field.group createPlayer() 
+  rt = field.group createPlayer()   
 
+  # factory for initializing players on their paths
+  initPlayer = (path, player) ->
+    initPoint = path.getPointAtLength(0)
+    player.transform 'T' + parseInt(initPoint.x) + ',' + parseInt(initPoint.y)
 
-  football = field.ellipse(0, 0, 10, 20).attr(
+  #initialize players along their paths
+  initPlayer wr1Path, wr1
+  initPlayer wr2Path, wr2
+  initPlayer wr3Path, wr3
+  initPlayer tePath, te
+  initPlayer rbPath, rb
+  initPlayer ltPath, lt
+  initPlayer lgPath, lg
+  initPlayer cPath, c
+  initPlayer rgPath, rg
+  initPlayer rtPath, rt
+  initPlayer qbPath, qb
+
+  # draw the football hike path
+
+  hikePathx = qbPath.getPointAtLength(0).x + 25
+  hikePathy = qbPath.getPointAtLength(0).y - 20
+
+  hikeEnd = hikePathx + " " + hikePathy
+
+  footballPath = field.path("M720 525," + hikeEnd)
+  
+  # create that pigskin
+  football = field.ellipse(0, 0, 10, 20).attr
     fill: 'rgba(105, 54, 24, 1)'
-  ) 
+
+  initPlayer(footballPath, football)
+
+  # the center starts with the football
+
+  # animate a player along their path
+
+  runRoute = (path, player, speed) ->
+    pathLength = path.getTotalLength()
+
+    speed = speed || 1500
+
+    Snap.animate 0, pathLength, ((value) ->
+      movePoint = path.getPointAtLength(value)
+      player.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
+      ), speed
+
+  findTarget = (targetPath) ->
+    startPointx = football.matrix.e
+    startPointy = football.matrix.f
+    endPointx = targetPath.getPointAtLength(1000).x
+    endPointy = targetPath.getPointAtLength(1000).y
+
+    startPoint = "M" + startPointx + " " + startPointy
+    endPoint = endPointx + " " + endPointy
+    pathCoordinates = startPoint + ", " + endPoint
+
+    newPath = field.path(pathCoordinates).attr
+      stroke: 'red'
+      strokeWidth: '4'
+
+    initPlayer newPath, football
+
+    throwFootball = () ->
+      runRoute(newPath, football, 500)
+
+    setTimeout throwFootball, 780
+
+  snapBall = () ->
+    pathLength = footballPath.getTotalLength()
+
+    Snap.animate 0, pathLength, ((value) ->
+      movePoint = footballPath.getPointAtLength(value)
+      football.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
+    ), 200, ->
+      findTarget(wr1Path)
+
 
   runPlay = () ->
-
-    lenWr1 = wr1Path.getTotalLength()
-
-    Snap.animate 0, lenWr1, ((value) ->
-      wr1MovePoint = wr1Path.getPointAtLength(value)
-      wr1.transform "T" + parseInt(wr1MovePoint.x) + ',' + parseInt(wr1MovePoint.y)
-    ), 1500
-
-
-  # # run the play
-  # runPlay = () ->
-  #   lenWr1 = wr1Path.getTotalLength()
-  #   lenWr2 = wr2Path.getTotalLength()
-  #   lenWr3 = wr3Path.getTotalLength()
-  #   lenTe = tePath.getTotalLength()
-  #   lenRb = rbPath.getTotalLength()
-  #   lenFootball = footballPath.getTotalLength()
-
-  #   Snap.animate 0, lenWr1, ((value) ->
-  #     wr1MovePoint = wr1Path.getPointAtLength(value)
-  #     console.log wr1MovePoint
-  #     console.log wr1
-  #     wr1.transform "T" + parseInt(wr1MovePoint.x - 25) + ',' + parseInt(wr1MovePoint.y - 25)
-  #   ), 1500
-
-    # Snap.animate 0, lenWr2, ((value) ->
-    #   wr2MovePoint = wr2Path.getPointAtLength(value)
-    #   wr2.transform "T" + parseInt(wr2MovePoint.x - 25) + ',' + parseInt(wr2MovePoint.y - 25)
-    # ), 1500
-
-    # Snap.animate 0, lenWr3, ((value) ->
-    #   wr3MovePoint = wr3Path.getPointAtLength(value)
-    #   wr3.transform "T" + parseInt(wr3MovePoint.x - 25) + ',' + parseInt(wr3MovePoint.y - 25)
-    # ), 1500
-
-    # Snap.animate 0, lenTe, ((value) ->
-    #   teMovePoint = tePath.getPointAtLength(value)
-    #   te.transform "T" + parseInt(teMovePoint.x - 25) + ',' + parseInt(teMovePoint.y - 25)
-    # ), 1500
-
-    # Snap.animate 0, lenRb, ((value) ->
-    #   rbMovePoint = rbPath.getPointAtLength(value)
-    #   rb.transform "T" + parseInt(rbMovePoint.x - 25) + ',' + parseInt(rbMovePoint.y - 25)
-    # ), 1500
-
-    # throwFootball = () ->
-    #   Snap.animate 0, lenFootball, ((value) ->
-    #     footballMovePoint = footballPath.getPointAtLength(value)
-    #     football.transform "T" + parseInt(footballMovePoint.x - 25) + ',' + parseInt(footballMovePoint.y - 25)
-    #     ), 1500
-
-    # throwFootball()
+    snapBall()
+    runRoute wr1Path, wr1
+    runRoute wr2Path, wr2
+    runRoute wr3Path, wr3
+    runRoute tePath, te
+    runRoute rbPath, rb
+    runRoute ltPath, lt, 600
+    runRoute lgPath, lg, 600
+    runRoute cPath, c, 600
+    runRoute rgPath, rg, 600
+    runRoute rtPath, rt, 600
+    runRoute qbPath, qb
+    
 
   hike = field.text(50, 50, "Hike!").attr(
     fill: 'white'
