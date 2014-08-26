@@ -29,8 +29,8 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   wr3Coordinates = ["M900 550", "850 500", "850 0"]
   teCoordinates = ["M450 550", "450 250", "700 250"]
   rbCoordinates = ["M600 700", "1150 650", "1175 550"]
-  qbCoordinates = ["M600 600", "600 650"]
-  ltCoordinates = ["M500 550", "500 600"]
+  qbCoordinates = ["M600 650", "600 650"]
+  ltCoordinates = ["M500 550  ", "500 600"]
   lgCoordinates = ["M550 550", "550 600"]
   cCoordinates = ["M600 550", "600 600"]
   rgCoordinates = ["M650 550", "650 600"]
@@ -49,9 +49,6 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rgPath = drawPath rgCoordinates
   rtPath = drawPath rtCoordinates
 
-  # draw the pigskin
-  footballPath = field.path("M650 575, 850 150")
-
   # factory for creating players
   createPlayer = () ->
     player = field.text(0, 0, "O")
@@ -60,22 +57,17 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       fontSize: "48"
 
   # create the offensive players
-  wr1 = createPlayer wr1Path
-  wr2 = createPlayer wr2Path
-  wr3 = createPlayer wr3Path
-  te = createPlayer tePath
-  rb = createPlayer rbPath
-  qb = createPlayer qbPath
-  lt = createPlayer ltPath
-  lg = createPlayer lgPath
-  c = createPlayer cPath
-  rg = createPlayer rgPath
-  rt = createPlayer rtPath
-
-  # create that pigskin
-  football = field.ellipse(0, 0, 10, 20).attr
-    fill: 'rgba(105, 54, 24, 1)'
-  
+  wr1 = field.group createPlayer() 
+  wr2 = field.group createPlayer() 
+  wr3 = field.group createPlayer() 
+  te = field.group createPlayer() 
+  rb = field.group createPlayer() 
+  qb = field.group createPlayer() 
+  lt = field.group createPlayer() 
+  lg = field.group createPlayer() 
+  c = field.group createPlayer() 
+  rg = field.group createPlayer() 
+  rt = field.group createPlayer()   
 
   # factory for initializing players on their paths
   initPlayer = (path, player) ->
@@ -95,6 +87,25 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   initPlayer rtPath, rt
   initPlayer qbPath, qb
 
+  # draw the football hike path
+
+  hikePathx = qbPath.getPointAtLength(0).x + 25
+  hikePathy = qbPath.getPointAtLength(0).y - 20
+
+  hikeEnd = hikePathx + " " + hikePathy
+
+  footballPath = field.path("M625 525," + hikeEnd).attr
+    stroke: 'yellow'
+    strokeWidth: '4'
+  
+  # create that pigskin
+  football = field.ellipse(0, 0, 10, 20).attr
+    fill: 'rgba(105, 54, 24, 1)'
+
+  initPlayer(footballPath, football)
+
+  # the center starts with the football
+
   # animate a player along their path
 
   runRoute = (path, player, speed) ->
@@ -107,7 +118,32 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       player.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
       ), speed
 
+  findTarget = (target) ->
+    startPointx = football.matrix.e
+    startPointy = football.matrix.f
+    endPointx = target.getPointAtLength(1000).x
+    endPointy = target.getPointAtLength(1000).y
+
+    startPoint = "M" + startPointx + " " + startPointy
+    endPoint = endPointx + " " + endPointy
+    pathCoordinates = startPoint + ", " + endPoint
+
+    newPath = field.path(pathCoordinates).attr
+      stroke: 'red'
+      strokeWidth: '4'
+
+  snapBall = () ->
+    pathLength = footballPath.getTotalLength()
+
+    Snap.animate 0, pathLength, ((value) ->
+      movePoint = footballPath.getPointAtLength(value)
+      football.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
+    ), 200, ->
+      findTarget(wr1Path)
+
+
   runPlay = () ->
+    snapBall()
     runRoute wr1Path, wr1
     runRoute wr2Path, wr2
     runRoute wr3Path, wr3
@@ -119,9 +155,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute rgPath, rg
     runRoute rtPath, rt
     runRoute qbPath, qb
-
-
-    # throwFootball()
+    
 
   hike = field.text(50, 50, "Hike!").attr(
     fill: 'white'
