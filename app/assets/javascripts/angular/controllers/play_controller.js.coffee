@@ -210,12 +210,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
     yDiff = targetPath.getPointAtLength(0).y - targetReceiver.matrix.f
 
-    console.log targetPath.getPointAtLength(yDiff)
-
     startPointx = football.matrix.e
     startPointy = football.matrix.f
-    endPointx = targetPath.getPointAtLength(yDiff + 200).x
-    endPointy = targetPath.getPointAtLength(yDiff + 200).y
+    endPointx = targetPath.getPointAtLength(yDiff*1.5).x
+    endPointy = targetPath.getPointAtLength(yDiff*1.5).y
 
     startPoint = "#{startPointx} #{startPointy}"
     endPoint = "#{endPointx} #{endPointy}"
