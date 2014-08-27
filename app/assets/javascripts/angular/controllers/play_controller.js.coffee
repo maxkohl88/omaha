@@ -101,17 +101,17 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       fontSize: "48"
 
   # create the offensive players
-  wr1 = field.group createPlayer(offense) 
-  wr2 = field.group createPlayer(offense) 
-  wr3 = field.group createPlayer(offense) 
-  te = field.group createPlayer(offense) 
-  rb = field.group createPlayer(offense) 
-  qb = field.group createPlayer(offense) 
-  lt = field.group createPlayer(offense) 
-  lg = field.group createPlayer(offense) 
-  c = field.group createPlayer(offense) 
-  rg = field.group createPlayer(offense) 
-  rt = field.group createPlayer(offense)
+  wr1 = field.group createPlayer offense
+  wr2 = field.group createPlayer offense
+  wr3 = field.group createPlayer offense
+  te = field.group createPlayer offense
+  rb = field.group createPlayer offense
+  qb = field.group createPlayer offense
+  lt = field.group createPlayer offense
+  lg = field.group createPlayer offense
+  c = field.group createPlayer offense
+  rg = field.group createPlayer offense
+  rt = field.group createPlayer offense
 
   lcb = field.group createPlayer(defense)
   rcb = field.group createPlayer(defense)
@@ -164,49 +164,28 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   # animate a player along their path
 
-  runRoute = (path, player, speed, hotRoute) ->
-    pathLength = path.getTotalLength()
+  runPlay = () ->
 
-    speed = speed || 2000
+    snapBall = () ->
+      pathLength = footballPath.getTotalLength()
 
-    Snap.animate 0, pathLength, ((value) ->
-      movePoint = path.getPointAtLength(value)
-      player.transform "T#{movePoint.x}, #{movePoint.y}"
-      if hotRoute is true 
-        findTarget(movePoint)
+      Snap.animate 0, pathLength, ((value) ->
+        movePoint = footballPath.getPointAtLength(value)
+        football.transform "T#{movePoint.x}, #{movePoint.y}"
+      ), 200
+
+    snapBall()
+
+    runRoute = (path, player, speed, hotRoute) ->
+      pathLength = path.getTotalLength()
+
+      speed = speed || 2000
+
+      Snap.animate 0, pathLength, ((value) ->
+        movePoint = path.getPointAtLength(value)
+        player.transform "T#{movePoint.x}, #{movePoint.y}"
       ), speed
 
-  findTarget = (targetPoint) ->
-    startPointx = qb.matrix.e
-    startPointy = qb.matrix.f
-    endPointx = targetPoint.x
-    endPointy = targetPoint.y
-
-    startPoint = "M#{startPointx} #{startPointy}"
-    endPoint = "#{endPointx} #{endPointy}"
-    pathCoordinates = "#{startPoint}, #{endPoint}"
-
-    newPath = field.path(pathCoordinates).attr
-      stroke: 'red'
-      strokeWidth: '4'
-
-    initPlayer newPath, football
-
-    throwFootball = () ->
-      runRoute(newPath, football, 500)
-
-    setTimeout throwFootball, 780
-
-  snapBall = () ->
-    pathLength = footballPath.getTotalLength()
-
-    Snap.animate 0, pathLength, ((value) ->
-      movePoint = footballPath.getPointAtLength(value)
-      football.transform "T#{movePoint.x}, #{movePoint.y}"
-    ), 200
-
-  runPlay = () ->
-    snapBall()
     runRoute wr1Path, wr1, 1500, true
     runRoute wr2Path, wr2
     runRoute wr3Path, wr3
@@ -226,7 +205,39 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute leftLbPath, leftLb, 1000
     runRoute rightLbPath, rightLb, 1000
     runRoute nickelCornerPath, nickelCorner, 1000
-    
+
+    throwFootball = (targetReceiver) ->
+      getPathPoint = (targetPath) ->
+        pathLength = parseInt(targetPath.getTotalLength())
+        i = 0
+        while i < pathLength
+          if (parseInt(targetPath.getPointAtLength(i).x) == parseInt(targetReceiver.matrix.e)) && (parseInt(targetPath.getPointAtLength(i).y) == (targetReceiver.matrix.f))
+            console.log targetPath.getPointAtLength(i)
+          i++
+
+      getPathPoint wr1Path
+
+      startPointx = football.matrix.e
+      startPointy = football.matrix.f
+      endPointx = targetReceiver.matrix.e
+      endPointy = targetReceiver.matrix.f
+
+      startPoint = "#{startPointx} #{startPointy}"
+      endPoint = "#{endPointx} #{endPointy}"
+      pathCoordinates = "M#{startPoint}, #{endPoint}"
+
+      newPath = field.path(pathCoordinates).attr
+        stroke: 'red'
+        strokeWidth: '4'
+
+      initPlayer newPath, football
+
+      runRoute(newPath, football, 500)
+
+    chuckIt = () ->
+      throwFootball(wr1)
+
+    setTimeout chuckIt, 500
 
   hike = field.text(50, 50, "Hike!").attr(
     fill: 'white'
