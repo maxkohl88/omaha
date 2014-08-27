@@ -64,7 +64,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rightSafetyCoordinates = ["M515 250", "720 50"]
   leftLbCoordinates = ["M895 475", "1140 325"]
   rightLbCoordinates = ["M475 380", "250 325"]
-  nickelCornerCoordinates = ["M520 200", "525 300"]
+  nickelCornerCoordinates = ["M600 200", "525 300"]
 
   #draw offensive player paths
   wr1Path = drawPath wr1Coordinates, offense
@@ -124,7 +124,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   # factory for initializing players on their paths
   initPlayer = (path, player) ->
     initPoint = path.getPointAtLength(0)
-    player.transform 'T' + parseInt(initPoint.x) + ',' + parseInt(initPoint.y)
+    player.transform "T#{initPoint.x}, #{initPoint.y}"
 
   #initialize players along their paths
   initPlayer wr1Path, wr1
@@ -152,9 +152,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   hikePathx = qbPath.getPointAtLength(0).x + 25
   hikePathy = qbPath.getPointAtLength(0).y - 20
 
-  hikeEnd = hikePathx + " " + hikePathy
-
-  footballPath = field.path("M720 525," + hikeEnd)
+  footballPath = field.path "M720 525, #{hikePathx} #{hikePathy}"
   
   # create that pigskin
   football = field.ellipse(0, 0, 10, 20).attr
@@ -166,25 +164,27 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   # animate a player along their path
 
-  runRoute = (path, player, speed) ->
+  runRoute = (path, player, speed, hotRoute) ->
     pathLength = path.getTotalLength()
 
-    speed = speed || 1500
+    speed = speed || 2000
 
     Snap.animate 0, pathLength, ((value) ->
       movePoint = path.getPointAtLength(value)
-      player.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
+      player.transform "T#{movePoint.x}, #{movePoint.y}"
+      if hotRoute is true 
+        findTarget(movePoint)
       ), speed
 
-  findTarget = (targetPath) ->
-    startPointx = football.matrix.e
-    startPointy = football.matrix.f
-    endPointx = targetPath.getPointAtLength(1000).x
-    endPointy = targetPath.getPointAtLength(1000).y
+  findTarget = (targetPoint) ->
+    startPointx = qb.matrix.e
+    startPointy = qb.matrix.f
+    endPointx = targetPoint.x
+    endPointy = targetPoint.y
 
-    startPoint = "M" + startPointx + " " + startPointy
-    endPoint = endPointx + " " + endPointy
-    pathCoordinates = startPoint + ", " + endPoint
+    startPoint = "M#{startPointx} #{startPointy}"
+    endPoint = "#{endPointx} #{endPointy}"
+    pathCoordinates = "#{startPoint}, #{endPoint}"
 
     newPath = field.path(pathCoordinates).attr
       stroke: 'red'
@@ -202,14 +202,12 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
     Snap.animate 0, pathLength, ((value) ->
       movePoint = footballPath.getPointAtLength(value)
-      football.transform 'T' + parseInt(movePoint.x) + ',' + parseInt(movePoint.y)
-    ), 200, ->
-      findTarget(wr1Path)
-
+      football.transform "T#{movePoint.x}, #{movePoint.y}"
+    ), 200
 
   runPlay = () ->
     snapBall()
-    runRoute wr1Path, wr1
+    runRoute wr1Path, wr1, 1500, true
     runRoute wr2Path, wr2
     runRoute wr3Path, wr3
     runRoute tePath, te
