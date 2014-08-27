@@ -160,14 +160,20 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   initPlayer(footballPath, football)
 
-  # the center starts with the football
+  runRoute = (path, player, speed, hotRoute) ->
+    pathLength = path.getTotalLength()
 
+    speed = speed || 2000
+
+    Snap.animate 0, pathLength, ((value) ->
+      movePoint = path.getPointAtLength(value)
+      player.transform "T#{movePoint.x}, #{movePoint.y}"
+    ), speed
   # animate a player along their path
 
   runPlay = () ->
 
-    qbWait = Math.floor(Math.random() * 1000) + 500
-    console.log qbWait
+    qbWait = Math.floor(Math.random() * 1000)
 
     snapBall = () ->
       pathLength = footballPath.getTotalLength()
@@ -178,16 +184,6 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       ), 200
 
     snapBall()
-
-    runRoute = (path, player, speed, hotRoute) ->
-      pathLength = path.getTotalLength()
-
-      speed = speed || 2000
-
-      Snap.animate 0, pathLength, ((value) ->
-        movePoint = path.getPointAtLength(value)
-        player.transform "T#{movePoint.x}, #{movePoint.y}"
-      ), speed
 
     runRoute wr1Path, wr1, 1500, true
     runRoute wr2Path, wr2
@@ -209,40 +205,45 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute rightLbPath, rightLb, 1000
     runRoute nickelCornerPath, nickelCorner, 1000
 
-    throwFootball = (targetReceiver, targetPath) ->
+  throwFootball = (targetReceiver, targetPath) ->
 
-      yDiff = targetPath.getPointAtLength(0).y - targetReceiver.matrix.f
+    yDiff = targetPath.getPointAtLength(0).y - targetReceiver.matrix.f
 
-      console.log targetPath.getPointAtLength(yDiff)
+    console.log targetPath.getPointAtLength(yDiff)
 
-      startPointx = football.matrix.e
-      startPointy = football.matrix.f
-      endPointx = targetPath.getPointAtLength(yDiff + 120).x
-      endPointy = targetPath.getPointAtLength(yDiff + 120).y
+    startPointx = football.matrix.e
+    startPointy = football.matrix.f
+    endPointx = targetPath.getPointAtLength(yDiff + 200).x
+    endPointy = targetPath.getPointAtLength(yDiff + 200).y
 
-      startPoint = "#{startPointx} #{startPointy}"
-      endPoint = "#{endPointx} #{endPointy}"
-      pathCoordinates = "M#{startPoint}, #{endPoint}"
+    startPoint = "#{startPointx} #{startPointy}"
+    endPoint = "#{endPointx} #{endPointy}"
+    pathCoordinates = "M#{startPoint}, #{endPoint}"
 
-      newPath = field.path(pathCoordinates).attr
-        stroke: 'red'
-        strokeWidth: '4'
+    newPath = field.path(pathCoordinates).attr
+      stroke: 'red'
+      strokeWidth: '4'
 
-      initPlayer newPath, football
+    initPlayer newPath, football
 
-      runRoute(newPath, football, 250)
 
-    chuckIt = () ->
-      throwFootball(te, tePath)
+    runRoute(newPath, football, 350)
 
-    setTimeout chuckIt, qbWait
+  chuckIt = () ->
+    throwFootball(wr3, wr3Path)
 
-  hike = field.text(50, 50, "Hike!").attr(
+
+  hike = field.text(50, 50, "Hike!").attr
     fill: 'white'
     fontSize: '36'
-    )
 
   hike.node.onclick = () ->
     runPlay()
 
+  pass = field.text(50, 150, "Pass!").attr
+    fill: 'white'
+    fontSize: '36'
+
+  pass.node.onclick = () ->
+    chuckIt()
 
