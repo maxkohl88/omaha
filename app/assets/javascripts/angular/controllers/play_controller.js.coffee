@@ -166,6 +166,9 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   runPlay = () ->
 
+    qbWait = Math.floor(Math.random() * 1000) + 500
+    console.log qbWait
+
     snapBall = () ->
       pathLength = footballPath.getTotalLength()
 
@@ -206,21 +209,16 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute rightLbPath, rightLb, 1000
     runRoute nickelCornerPath, nickelCorner, 1000
 
-    throwFootball = (targetReceiver) ->
-      getPathPoint = (targetPath) ->
-        pathLength = parseInt(targetPath.getTotalLength())
-        i = 0
-        while i < pathLength
-          if (parseInt(targetPath.getPointAtLength(i).x) == parseInt(targetReceiver.matrix.e)) && (parseInt(targetPath.getPointAtLength(i).y) == (targetReceiver.matrix.f))
-            console.log targetPath.getPointAtLength(i)
-          i++
+    throwFootball = (targetReceiver, targetPath) ->
 
-      getPathPoint wr1Path
+      yDiff = targetPath.getPointAtLength(0).y - targetReceiver.matrix.f
+
+      console.log targetPath.getPointAtLength(yDiff)
 
       startPointx = football.matrix.e
       startPointy = football.matrix.f
-      endPointx = targetReceiver.matrix.e
-      endPointy = targetReceiver.matrix.f
+      endPointx = targetPath.getPointAtLength(yDiff + 120).x
+      endPointy = targetPath.getPointAtLength(yDiff + 120).y
 
       startPoint = "#{startPointx} #{startPointy}"
       endPoint = "#{endPointx} #{endPointy}"
@@ -232,12 +230,12 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
       initPlayer newPath, football
 
-      runRoute(newPath, football, 500)
+      runRoute(newPath, football, 250)
 
     chuckIt = () ->
-      throwFootball(wr1)
+      throwFootball(te, tePath)
 
-    setTimeout chuckIt, 500
+    setTimeout chuckIt, qbWait
 
   hike = field.text(50, 50, "Hike!").attr(
     fill: 'white'
