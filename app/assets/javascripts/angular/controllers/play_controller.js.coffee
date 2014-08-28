@@ -114,6 +114,15 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rg = field.group createPlayer offense
   rt = field.group createPlayer offense
 
+  # factory for drawing a player's catch radius
+  catchRadius = (player) ->
+    area = field.circle(0, 0, 50).attr
+      # fill: 'rgba(255, 255, 0, 0.6)'
+      fill: 'none'
+    player.add area
+
+  catchRadius(wr3)
+
   lcb = field.group createPlayer(defense)
   rcb = field.group createPlayer(defense)
   leftSafety = field.group createPlayer(defense)
@@ -169,7 +178,12 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     Snap.animate 0, pathLength, ((value) ->
       movePoint = path.getPointAtLength(value)
       player.transform "T#{movePoint.x}, #{movePoint.y}"
+      xDifference = Math.abs(wr3.matrix.e - football.matrix.e)
+      yDifference = Math.abs(wr3.matrix.f - football.matrix.f)
+      if (xDifference <= 50) && (yDifference <= 50)
+        catchPass()
     ), speed
+
   # animate a player along their path
 
   runPlay = () ->
@@ -207,26 +221,22 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute nickelCornerPath, nickelCorner, 1000
 
   throwFootball = (targetReceiver, targetPath) ->
-
     yDiff = targetPath.getPointAtLength(0).y - targetReceiver.matrix.f
-
-    console.log targetPath.getPointAtLength(yDiff)
 
     startPointx = football.matrix.e
     startPointy = football.matrix.f
-    endPointx = targetPath.getPointAtLength(yDiff + 200).x
-    endPointy = targetPath.getPointAtLength(yDiff + 200).y
+    endPointx = targetPath.getPointAtLength(yDiff*1.5).x
+    endPointy = targetPath.getPointAtLength(yDiff*1.5).y
 
     startPoint = "#{startPointx} #{startPointy}"
     endPoint = "#{endPointx} #{endPointy}"
     pathCoordinates = "M#{startPoint}, #{endPoint}"
 
-    newPath = field.path(pathCoordinates).attr
-      stroke: 'red'
-      strokeWidth: '4'
+    newPath = field.path(pathCoordinates)
+      # stroke: 'red'
+      # strokeWidth: '4'
 
     initPlayer newPath, football
-
 
     runRoute(newPath, football, 350)
 
@@ -246,5 +256,9 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     fontSize: '36'
 
   pass.node.onclick = () ->
-    chuckIt()
+    throwFootball(wr3, wr3Path)
+
+  catchPass = () ->
+    wr3.add football
+    football.transform "T15, -15"
 
