@@ -1,14 +1,12 @@
 app = angular.module 'play.controller', []
 
-app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
+app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
 
   $scope.pageClass = 'page-play'
-  # wrap a Snap canvas on the football field
-  $scope.field = Snap ('#football-field')
 
   # set a scoped reference to the field as 'field'
-  field = $scope.field
 
+  field = Snap ('#football-field')
   # initiate an empty array for the offensive players and set a scoped reference
   # to it as 'offense'
   $scope.offense = []
@@ -16,6 +14,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   $scope.defense = []
   defense = $scope.defense
+
+  $scope.selectedReceiver = 'wr3'
+
+  $scope.availableTargets = ['wr1', 'wr2', 'wr3', 'te', 'rb']
 
   # factory for drawing paths
   drawPath = (coordinates, team) ->
@@ -30,7 +32,6 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
       strokeWidth: '4'
       stroke: stroke
       strokeDasharray: '12 6'
-      
   # factory for creating zones
   drawZone = (cx, cy, r) ->
     field.circle(cx, cy, r).attr
@@ -87,7 +88,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   leftLbPath = drawPath leftLbCoordinates
   rightLbPath = drawPath rightLbCoordinates
   nickelCornerPath = drawPath nickelCornerCoordinates
-
+    
 
   # factory for creating players
   createPlayer = (team) ->

@@ -1,1 +1,5 @@
 %svg{id: "football-field", width: "1440", height: "800", style: "background:rgba(43, 162, 43, 1)"}
+  %foreignobject{x: '50', y: '600', width: '400', height: '100', style: 'background: rgba(255, 255, 255, 0.6)'}
+    %h2 Select a receiver:
+    %ul.targets{ng_repeat: 'target in availableTargets'}
+      %li.target{{ng_click:"setPrimaryTarget(target)"}} {{target}}
