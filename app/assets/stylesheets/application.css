@@ -18,17 +18,3 @@ body {
   margin: 0;
 }
 
-/* make our pages be full width and full height */
-/* positioned absolutely so that the pages can overlap each other as they enter and leave */
-.page        {
-  bottom:0; 
-  position:absolute; 
-  text-align:center;
-  top:0;  
-  width:100%; 
-}
-
-.page h1  { font-size:60px; }
-.page a   { margin-top:50px; }
-
-.page-home    { background:#00D0BC; color:#00907c; }

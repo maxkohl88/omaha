@@ -3,7 +3,6 @@ app = angular.module 'play.controller', []
 app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   $scope.pageClass = 'page-play'
-
   # wrap a Snap canvas on the football field
   $scope.field = Snap ('#football-field')
 
