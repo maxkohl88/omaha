@@ -15,10 +15,6 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   $scope.defense = []
   defense = $scope.defense
 
-  $scope.selectedReceiver = 'wr3'
-
-  $scope.availableTargets = ['wr1', 'wr2', 'wr3', 'te', 'rb']
-
   # factory for drawing paths
   drawPath = (coordinates, team) ->
     pathNodes = coordinates.join(',')
@@ -27,11 +23,13 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
     else
       stroke = ""
 
-    field.path(pathNodes).attr
+    newPath = field.path(pathNodes).attr
       fill: 'none'
       strokeWidth: '4'
       stroke: stroke
       strokeDasharray: '12 6'
+
+
   # factory for creating zones
   drawZone = (cx, cy, r) ->
     field.circle(cx, cy, r).attr
@@ -88,7 +86,26 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   leftLbPath = drawPath leftLbCoordinates
   rightLbPath = drawPath rightLbCoordinates
   nickelCornerPath = drawPath nickelCornerCoordinates
-    
+
+  # bunch all of the target routes together
+
+  $scope.targetRoutes = [wr1Path, wr2Path, wr3Path, tePath, rbPath]
+
+  $scope.availableTargets = ['wr1', 'wr2', 'wr3', 'te', 'rb']
+
+  # resetColor = (element, index, array) ->
+  #   element.attr
+  #     fill: 'white'
+
+  $scope.setPrimaryTarget = (target) ->
+    index = $scope.availableTargets.indexOf(target)
+    $scope.targetRoutes.forEach (route) ->
+      route.attr
+        stroke: 'white'
+    $scope.targetRoutes[index].attr
+      stroke: 'red'
+
+
 
   # factory for creating players
   createPlayer = (team) ->
@@ -121,8 +138,6 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
       # fill: 'rgba(255, 255, 0, 0.6)'
       fill: 'none'
     player.add area
-
-  catchRadius(wr3)
 
   lcb = field.group createPlayer(defense)
   rcb = field.group createPlayer(defense)
