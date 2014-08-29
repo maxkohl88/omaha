@@ -4,7 +4,6 @@ html         { overflow-y:hidden; }
 .page        { 
   bottom:0; 
   position:absolute; 
-  text-align:center;
   top:0;  
   width:100%; 
 }
@@ -15,7 +14,11 @@ html         { overflow-y:hidden; }
 
 /* PAGES
 ============================================================================= */
-.page-home    { background:#00D0BC; color:#00907c; }
+.page-home { 
+  background-image: url('/assets/peytonhighres.png');
+  background-size: cover; 
+  color: rgba(255, 255, 255, 1);
+}
 .page-about   { background:#E59400; color:#a55400; }
 .page-contact   { background:#ffa6bb; color:#9e0000; }
 
