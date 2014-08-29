@@ -10,3 +10,8 @@ app.config ['$routeProvider', ($routeProvider) ->
   ).otherwise redirectTo: '/']
 
 
+app.factory 'snapFactory', @snapFactory = () ->
+  service = {}
+  
+  service.wrapPage = () ->
+    'butts'

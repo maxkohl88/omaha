@@ -1,14 +1,12 @@
 app = angular.module 'play.controller', []
 
-app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
+app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
 
   $scope.pageClass = 'page-play'
-  # wrap a Snap canvas on the football field
-  $scope.field = Snap ('#football-field')
 
   # set a scoped reference to the field as 'field'
-  field = $scope.field
 
+  field = Snap ('#football-field')
   # initiate an empty array for the offensive players and set a scoped reference
   # to it as 'offense'
   $scope.offense = []
@@ -25,16 +23,17 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     else
       stroke = ""
 
-    field.path(pathNodes).attr
+    newPath = field.path(pathNodes).attr
       fill: 'none'
       strokeWidth: '4'
       stroke: stroke
       strokeDasharray: '12 6'
-      
+
+
   # factory for creating zones
   drawZone = (cx, cy, r) ->
     field.circle(cx, cy, r).attr
-      fill: 'rgba(122, 219, 218, 0.6)'
+      fill: 'none'
 
   # draw zones for defensive players
   deepRight = drawZone(195, 150, 160)
@@ -88,7 +87,6 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rightLbPath = drawPath rightLbCoordinates
   nickelCornerPath = drawPath nickelCornerCoordinates
 
-
   # factory for creating players
   createPlayer = (team) ->
     if team is offense
@@ -114,14 +112,35 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
   rg = field.group createPlayer offense
   rt = field.group createPlayer offense
 
+  # bunch all of the target routes together
+
+  $scope.targetRoutes = [wr1Path, wr2Path, wr3Path, tePath, rbPath]
+
+  $scope.availableTargets = ['wr1', 'wr2', 'wr3', 'te', 'rb']
+
+  $scope.receivers = [wr1, wr2, wr3, te, rb]
+
+  $scope.primaryReceiver = wr3
+
+  $scope.primaryRoute = wr3Path
+
+  $scope.setPrimaryTarget = (target) ->
+    index = $scope.availableTargets.indexOf(target)
+    $scope.targetRoutes.forEach (route) ->
+      route.attr
+        stroke: 'white'
+    primaryRoute = $scope.targetRoutes[index]
+    primaryRoute.attr
+      stroke: 'red'
+    $scope.routeRoute = primaryRoute
+    $scope.primaryReceiver = $scope.receivers[index]
+
   # factory for drawing a player's catch radius
   catchRadius = (player) ->
     area = field.circle(0, 0, 50).attr
       # fill: 'rgba(255, 255, 0, 0.6)'
       fill: 'none'
     player.add area
-
-  catchRadius(wr3)
 
   lcb = field.group createPlayer(defense)
   rcb = field.group createPlayer(defense)
@@ -170,7 +189,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   initPlayer(footballPath, football)
 
-  runRoute = (path, player, speed, hotRoute) ->
+  runRoute = (path, player, speed, targetReceiver) ->
     pathLength = path.getTotalLength()
 
     speed = speed || 2000
@@ -178,9 +197,9 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     Snap.animate 0, pathLength, ((value) ->
       movePoint = path.getPointAtLength(value)
       player.transform "T#{movePoint.x}, #{movePoint.y}"
-      xDifference = Math.abs(wr3.matrix.e - football.matrix.e)
-      yDifference = Math.abs(wr3.matrix.f - football.matrix.f)
-      if (xDifference <= 50) && (yDifference <= 50)
+      xDifference = Math.abs($scope.primaryReceiver.matrix.e - football.matrix.e)
+      yDifference = Math.abs($scope.primaryReceiver.matrix.f - football.matrix.f)
+      if (xDifference <= 50) and (yDifference <= 50)
         catchPass()
     ), speed
 
@@ -200,7 +219,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
     snapBall()
 
-    runRoute wr1Path, wr1, 1500, true
+    runRoute wr1Path, wr1, 1500
     runRoute wr2Path, wr2
     runRoute wr3Path, wr3
     runRoute tePath, te
@@ -241,24 +260,15 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     runRoute(newPath, football, 350)
 
   chuckIt = () ->
-    throwFootball(wr3, wr3Path)
+    throwFootball($scope.primaryReceiver, $scope.primaryRoute)
 
-
-  hike = field.text(50, 50, "Hike!").attr
-    fill: 'white'
-    fontSize: '36'
-
-  hike.node.onclick = () ->
+  $scope.hike = () ->
     runPlay()
 
-  pass = field.text(50, 150, "Pass!").attr
-    fill: 'white'
-    fontSize: '36'
-
-  pass.node.onclick = () ->
-    throwFootball(wr3, wr3Path)
+  $scope.pass = () ->
+    throwFootball($scope.primaryReceiver, $scope.primaryRoute)
 
   catchPass = () ->
-    wr3.add football
+    $scope.primaryReceiver.add football
     football.transform "T15, -15"
 
