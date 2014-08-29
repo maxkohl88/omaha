@@ -19,13 +19,13 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   drawPath = (coordinates, team) ->
     pathNodes = coordinates.join(',')
     if team is offense
-      stroke = "white"
+      stroke = "black"
     else
       stroke = ""
 
     newPath = field.path(pathNodes).attr
       fill: 'none'
-      strokeWidth: '4'
+      strokeWidth: '6'
       stroke: stroke
       strokeDasharray: '12 6'
 
@@ -91,13 +91,16 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   createPlayer = (team) ->
     if team is offense
       letter = "O"
+      playerFill = "blue"
     else
       letter = "X"
+      playerFill = "red"
 
     player = field.text(0, 0, letter)
     player.attr
-      fill: "white"
-      fontSize: "48"
+      fill: playerFill
+      fontSize: "72"
+      fontFamily: 'Roboto Slab';
 
   # create the offensive players
   wr1 = field.group createPlayer offense
@@ -128,10 +131,12 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
     index = $scope.availableTargets.indexOf(target)
     $scope.targetRoutes.forEach (route) ->
       route.attr
-        stroke: 'white'
+        stroke: 'black'
+        strokeWidth: '6'
     primaryRoute = $scope.targetRoutes[index]
     primaryRoute.attr
       stroke: 'red'
+      strokeWidth: '8'
     $scope.routeRoute = primaryRoute
     $scope.primaryReceiver = $scope.receivers[index]
 
@@ -184,7 +189,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   footballPath = field.path "M720 525, #{hikePathx} #{hikePathy}"
   
   # create that pigskin
-  football = field.ellipse(0, 0, 10, 20).attr
+  football = field.ellipse(0, 0, 15, 30).attr
     fill: 'rgba(105, 54, 24, 1)'
 
   initPlayer(footballPath, football)

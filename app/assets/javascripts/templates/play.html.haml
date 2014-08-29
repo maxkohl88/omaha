@@ -1,12 +1,13 @@
-%svg{id: "football-field", width: "1440", height: "800", style: "background:rgba(43, 162, 43, 1)"}
-  %foreignobject{id: 'selection-box', x: '0', y: '75', width: '120', height: '600'}
-    %p Select your target:
-    %ul
-      %li.target{ng_repeat: 'target in availableTargets'}
-        %button.target-button{{ng_click:"setPrimaryTarget(target)"}} {{target}}
-    %p Run play:
-    %ul
-      %li.action
-        %button.hike{{ng_click:"hike()"}} Hike
-      %li.action
-        %button.pass{{ng_click:"pass()"}} Pass
+#play-page-container
+  %svg{id: "football-field", width: "1440", height: "800"}
+    %foreignobject{id: 'selection-box', x: '0', y: '75', width: '120', height: '600'}
+      %p Select your target:
+      %ul
+        %li.target{ng_repeat: 'target in availableTargets'}
+          %button.target-button{{ng_click:"setPrimaryTarget(target)"}} {{target}}
+      %p Run play:
+      %ul
+        %li.action
+          %button.hike{{ng_click:"hike()"}} Hike
+        %li.action
+          %button.pass{{ng_click:"pass()"}} Pass

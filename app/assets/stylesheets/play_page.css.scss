@@ -1,3 +1,26 @@
+#play-page-container {
+  position: relative;
+  overflow: hidden;
+}
+
+#play-page-container:before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  z-index: -1;
+  background-image: url('/assets/footballfield.svg.png');
+  background-repeat: no-repeat;
+  background-size: 200em;
+  -webkit-transform: rotate(30deg);
+  -moz-transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  -o-transform: rotate(30deg);
+  transform: translateX(-2em) rotate(90deg);
+}
+
 #selection-box {
   background-color: rgba(255, 255, 255, 1);
   font-family: 'Roboto Slab', serif;
