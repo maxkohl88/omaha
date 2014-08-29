@@ -1,7 +1,50 @@
-ul.targets {
-  display: inline-flex;
+#selection-box {
+  background-color: rgba(255, 255, 255, 1);
+  font-family: 'Roboto Slab', serif;
+  padding-top: 20px;
+  h2 {
+    margin: 0px;
+  }
 
-  li.target {
-    list-style-type: none;
+  ul {
+  display: block;
+  padding-left: 0px;
+  margin-bottom: 2.2em;
+
+    li.target {
+      list-style-type: none;
+      $side-margin: 2em;
+      margin-top: $side-margin;
+      margin-bottom: $side-margin;
+
+      button.target-button {
+        width: 5.2em;
+        height: 2.3em;
+        background-color: rgba(255, 255, 255, 1);
+        border: 2px solid black;
+        font-family: 'Roboto Slab', serif;
+        font-size: 12px;
+        padding: 0.1em;
+      }
+    }
+
+    li.action {
+      list-style-type: none;
+      $side-margin: 2em;
+      margin-top: $side-margin;
+      margin-bottom: $side-margin;
+
+      button {
+        width: 6em;
+        height: 3em;
+        background-color: rgba(255, 255, 255, 1);
+        border: 2px solid black;
+        font-family: 'Roboto Slab', serif;
+        font-size: 12px;
+        padding: 0.1em;
+      }
+    }
   }
 }
+
+
