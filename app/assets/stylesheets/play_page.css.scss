@@ -11,6 +11,7 @@
   top: -50%;
   left: -50%;
   z-index: -1;
+  opacity: 1;
   background-image: url('/assets/footballfield.svg.png');
   background-repeat: no-repeat;
   background-size: 200em;
@@ -19,6 +20,10 @@
   -ms-transform: rotate(30deg);
   -o-transform: rotate(30deg);
   transform: translateX(-2em) rotate(90deg);
+}
+
+.clicked-button {
+  background-color: rgba(0, 255, 255, 1);
 }
 
 #selection-box {
@@ -39,16 +44,20 @@
       $side-margin: 2em;
       margin-top: $side-margin;
       margin-bottom: $side-margin;
+    }
 
-      button.target-button {
-        width: 5.2em;
-        height: 2.3em;
-        background-color: rgba(255, 255, 255, 1);
-        border: 2px solid black;
-        font-family: 'Roboto Slab', serif;
-        font-size: 12px;
-        padding: 0.1em;
-      }
+    button {
+      width: 5.2em;
+      height: 2.3em;
+      background-color: rgba(255, 255, 255, 1);
+      border: 2px solid black;
+      outline: none;
+      font-family: 'Roboto Slab', serif;
+      font-size: 12px;
+      padding: 0.1em;
+      moz-border-radius: 10px 10px 10px 10px;
+      webkit-border-radius: 10px 10px 10px 10px;
+      border-radius: 10px 10px 10px 10px;
     }
 
     li.action {
@@ -62,9 +71,13 @@
         height: 3em;
         background-color: rgba(255, 255, 255, 1);
         border: 2px solid black;
+        outline: none;
         font-family: 'Roboto Slab', serif;
         font-size: 12px;
         padding: 0.1em;
+        moz-border-radius: 11px 11px 11px 11px;
+        webkit-border-radius: 11px 11px 11px 11px;
+        border-radius: 11px 11px 11px 11px;
       }
     }
   }

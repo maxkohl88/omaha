@@ -19,7 +19,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   drawPath = (coordinates, team) ->
     pathNodes = coordinates.join(',')
     if team is offense
-      stroke = "black"
+      stroke = "rgba(0, 0, 0, 1)"
     else
       stroke = ""
 
@@ -99,16 +99,18 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   createPlayer = (team) ->
     if team is offense
       letter = "O"
-      playerFill = "blue"
+      playerFill = "rgba(0, 0, 160, 1)"
     else
       letter = "X"
-      playerFill = "red"
+      playerFill = "rgba(220, 0, 0, 0.9)"
 
     player = field.text(0, 0, letter)
     player.attr
       fill: playerFill
       fontSize: "72"
-      fontFamily: 'Roboto Slab';
+      fontFamily: 'Roboto Slab'
+      stroke: "rgba(255, 255, 255, 0.8)"
+      strokeWidth: '2'
 
   # create the offensive players
   wr1 = field.group createPlayer offense
@@ -296,4 +298,5 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   catchPass = () ->
     $scope.primaryReceiver.add football
     football.transform "T15, -15"
+
 
