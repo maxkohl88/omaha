@@ -19,13 +19,13 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   drawPath = (coordinates, team) ->
     pathNodes = coordinates.join(',')
     if team is offense
-      stroke = "white"
+      stroke = "black"
     else
       stroke = ""
 
     newPath = field.path(pathNodes).attr
       fill: 'none'
-      strokeWidth: '4'
+      strokeWidth: '6'
       stroke: stroke
       strokeDasharray: '12 6'
 
@@ -65,6 +65,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   leftLbCoordinates = ["M895 475", "1140 325"]
   rightLbCoordinates = ["M475 380", "250 325"]
   nickelCornerCoordinates = ["M600 200", "525 300"]
+  leftDECoordinates = ["M815 475", "815 590"]
+  dtCoordinates = ["M715 475", "715 570"]
+  ntCoordinates = ["M625 475", "625 570"]
+  rightDECoordinates = ["M550 475", "575 590"]
 
   #draw offensive player paths
   wr1Path = drawPath wr1Coordinates, offense
@@ -86,18 +90,25 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   leftLbPath = drawPath leftLbCoordinates
   rightLbPath = drawPath rightLbCoordinates
   nickelCornerPath = drawPath nickelCornerCoordinates
+  leftDEPath = drawPath leftDECoordinates
+  dtPath = drawPath dtCoordinates
+  ntPath = drawPath ntCoordinates
+  rightDEPath = drawPath rightDECoordinates
 
   # factory for creating players
   createPlayer = (team) ->
     if team is offense
       letter = "O"
+      playerFill = "blue"
     else
       letter = "X"
+      playerFill = "red"
 
     player = field.text(0, 0, letter)
     player.attr
-      fill: "white"
-      fontSize: "48"
+      fill: playerFill
+      fontSize: "72"
+      fontFamily: 'Roboto Slab';
 
   # create the offensive players
   wr1 = field.group createPlayer offense
@@ -128,10 +139,12 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
     index = $scope.availableTargets.indexOf(target)
     $scope.targetRoutes.forEach (route) ->
       route.attr
-        stroke: 'white'
+        stroke: 'black'
+        strokeWidth: '6'
     primaryRoute = $scope.targetRoutes[index]
     primaryRoute.attr
       stroke: 'red'
+      strokeWidth: '8'
     $scope.routeRoute = primaryRoute
     $scope.primaryReceiver = $scope.receivers[index]
 
@@ -149,6 +162,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   leftLb = field.group createPlayer(defense)
   rightLb = field.group createPlayer(defense)
   nickelCorner = field.group createPlayer(defense)
+  leftDE = field.group createPlayer(defense)
+  dt = field.group createPlayer(defense)
+  nt = field.group createPlayer(defense)
+  rightDE = field.group createPlayer(defense)
 
   # factory for initializing players on their paths
   initPlayer = (path, player) ->
@@ -175,6 +192,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   initPlayer leftLbPath, leftLb
   initPlayer rightLbPath, rightLb
   initPlayer nickelCornerPath, nickelCorner
+  initPlayer leftDEPath, leftDE
+  initPlayer dtPath, dt
+  initPlayer ntPath, nt
+  initPlayer rightDEPath, rightDE
 
   # draw the football hike path
 
@@ -184,7 +205,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
   footballPath = field.path "M720 525, #{hikePathx} #{hikePathy}"
   
   # create that pigskin
-  football = field.ellipse(0, 0, 10, 20).attr
+  football = field.ellipse(0, 0, 15, 30).attr
     fill: 'rgba(105, 54, 24, 1)'
 
   initPlayer(footballPath, football)
@@ -238,6 +259,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
     runRoute leftLbPath, leftLb, 1000
     runRoute rightLbPath, rightLb, 1000
     runRoute nickelCornerPath, nickelCorner, 1000
+    runRoute leftDEPath, leftDE, 625
+    runRoute dtPath, dt, 650
+    runRoute ntPath, nt, 650
+    runRoute rightDEPath, rightDE, 625
 
   throwFootball = (targetReceiver, targetPath) ->
     yDiff = targetPath.getPointAtLength(0).y - targetReceiver.matrix.f
