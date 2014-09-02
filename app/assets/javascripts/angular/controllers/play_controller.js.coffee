@@ -1,6 +1,6 @@
 app = angular.module 'play.controller', []
 
-app.controller 'PlayCtrl', @PlayCtrl = ($scope, snapFactory) ->
+app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
 
   $scope.pageClass = 'page-play'
 

@@ -1,4 +1,4 @@
-app = angular.module 'omaha', ['templates', 'omaha.controllers', 'ngRoute', 'ngAnimate']
+app = angular.module 'omaha', ['templates', 'omaha.controllers', 'ngRoute', 'ngAnimate', 'playPageServices']
 
 app.config ['$routeProvider', ($routeProvider) ->
   $routeProvider.when('/',
@@ -9,9 +9,4 @@ app.config ['$routeProvider', ($routeProvider) ->
     controller: 'PlayCtrl'
   ).otherwise redirectTo: '/']
 
-
-app.factory 'snapFactory', @snapFactory = () ->
-  service = {}
   
-  service.wrapPage = () ->
-    'butts'
