@@ -1,0 +1,21 @@
+.create-play-menu {
+  width: 20%;
+  min-height: 700px;
+  background-color: #5eafdb;
+  float: left;
+
+  .side-selection-box {
+    background-color: white;
+    width: 80%;
+    margin: 0 auto;
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.create-play-field {
+  min-height: 700px;
+  background-color: #1d9531;
+}
