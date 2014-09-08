@@ -7,6 +7,9 @@ app.config ['$routeProvider', ($routeProvider) ->
   ).when('/play',
     templateUrl: 'play.html',
     controller: 'PlayCtrl'
+  ).when('/create',
+    templateUrl: 'create.html',
+    controller: 'CreatePlayCtrl'
   ).otherwise redirectTo: '/']
 
   
