@@ -1,21 +1,37 @@
+$page-height: 850px;
+
 .create-play-menu {
   width: 20%;
-  min-height: 700px;
+  min-height: $page-height;
   background-color: #5eafdb;
   float: left;
+  padding-top: 20px;
 
   .side-selection-box {
     background-color: white;
     width: 80%;
+    min-height: 100px;
     margin: 0 auto;
+    text-align: center;
+    font-size: 1.4em;
 
-    p {
-      margin: 0;
+    .side-button-container {
+      list-style-type: none;
+      display: inline-flex;
+      padding-left: 0px;
+      margin: 0px;
+
+      button {
+        width: 9.5em;
+        height: 2.6em;
+        margin: 1em;
+        font-size: 0.6em;
+      }
     }
   }
 }
 
 .create-play-field {
-  min-height: 700px;
+  min-height: $page-height;
   background-color: #1d9531;
 }
