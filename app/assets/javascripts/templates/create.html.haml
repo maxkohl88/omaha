@@ -4,7 +4,7 @@
       %span Offensive or Defensive Play?
       %ul.side-button-container
         %li
-          %button Offense
+          %button{{ng_click:"basicOffense()"}} Offense
         %li
-          %button Defense
-  .create-play-field
+          %button{{ng_click:"basicDefense()"}} Defense
+  %svg.create-play-field

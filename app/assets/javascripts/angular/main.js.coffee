@@ -1,4 +1,4 @@
-app = angular.module 'omaha', ['templates', 'omaha.controllers', 'ngRoute', 'ngAnimate', 'playPageServices']
+app = angular.module 'omaha', ['templates', 'omaha.controllers', 'ngRoute', 'ngAnimate', 'playPageServices', 'creationServices']
 
 app.config ['$routeProvider', ($routeProvider) ->
   $routeProvider.when('/',

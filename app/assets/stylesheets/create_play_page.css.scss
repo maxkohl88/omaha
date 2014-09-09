@@ -4,16 +4,16 @@ $page-height: 850px;
   width: 20%;
   min-height: $page-height;
   background-color: #5eafdb;
-  float: left;
   padding-top: 20px;
+  float: left;
 
   .side-selection-box {
     background-color: white;
-    width: 80%;
     min-height: 100px;
     margin: 0 auto;
     text-align: center;
     font-size: 1.4em;
+    width: 80%;
 
     .side-button-container {
       list-style-type: none;
@@ -32,6 +32,8 @@ $page-height: 850px;
 }
 
 .create-play-field {
+  width: 1500px;;
   min-height: $page-height;
   background-color: #1d9531;
+  float: right;
 }
