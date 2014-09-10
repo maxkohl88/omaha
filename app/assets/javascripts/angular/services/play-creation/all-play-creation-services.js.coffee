@@ -1,17 +1,20 @@
-app = angular.module 'creationServices', []
+# app = angular.module 'creationServices', []
 
-app.factory 'Plays',[ '$http', ($http) ->
+# app.factory 'Plays',['$http', ($http) ->
 
-  new class Plays
-    constructor: ->
-      @getAllPlays() 
+#   new class Plays
 
-    getAllPlays: ->
-      $http(
-        { method: 'GET', url: '/offensive_plays'}
-      ).success((data) ->
-        console.log data
-      ).error(() ->
-        console.log 'whoops'
-      )
-]
+#     constructor: ->
+#       @getAllPlays()
+#       @routeData = []
+
+#     getAllPlays: ->
+#       $http(
+#         { method: 'GET', url: '/offensive_plays' }
+#       ).then((data) ->
+#         @routeData = data
+#         console.log @routeData.data
+#       )
+
+
+# ]
