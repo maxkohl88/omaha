@@ -1,19 +1,14 @@
-app = angular.module 'create.controller', []
+app = angular.module 'create.controller', ['creationServices']
 
-app.controller "CreatePlayCtrl", @CreatePlayCtrl = ($scope, $http) ->
+app.controller "CreatePlayCtrl", @CreatePlayCtrl = ($scope, $http, Plays) ->
 
   $scope.pageClass = 'page-create'
 
   $scope.field = Snap '.create-play-field'
 
   $scope.basicOffense = () ->
-    $http(
-      { method: 'GET', url: '/offensive_plays'}
-    ).success((data) ->
-      console.log data
-    ).error(() ->
-      console.log 'whoops'
-    )
+    Plays.getAllPlays()
+
 
   $scope.basicDefense = () ->
     console.log "Draw some defense"
