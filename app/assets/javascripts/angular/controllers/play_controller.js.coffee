@@ -147,7 +147,7 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     primaryRoute.attr
       stroke: 'red'
       strokeWidth: '8'
-    $scope.routeRoute = primaryRoute
+    $scope.primaryRoute = primaryRoute
     $scope.primaryReceiver = $scope.receivers[index]
 
   # factory for drawing a player's catch radius
@@ -279,15 +279,10 @@ app.controller 'PlayCtrl', @PlayCtrl = ($scope) ->
     pathCoordinates = "M#{startPoint}, #{endPoint}"
 
     newPath = field.path(pathCoordinates)
-      # stroke: 'red'
-      # strokeWidth: '4'
 
     initPlayer newPath, football
 
     runRoute(newPath, football, 350)
-
-  chuckIt = () ->
-    throwFootball($scope.primaryReceiver, $scope.primaryRoute)
 
   $scope.hike = () ->
     runPlay()
